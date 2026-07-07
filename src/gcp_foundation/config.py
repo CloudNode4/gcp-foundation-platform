@@ -96,7 +96,7 @@ class NetworkConfig(StrictModel):
     nat: NatConfig | None = None
 
     @model_validator(mode="after")
-    def validate_unique_subnets(self) -> "NetworkConfig":
+    def validate_unique_subnets(self) -> NetworkConfig:
         names = [subnet.name for subnet in self.subnets]
         duplicates = sorted({name for name in names if names.count(name) > 1})
         if duplicates:
@@ -109,7 +109,7 @@ class ListPolicyConfig(StrictModel):
     denied_values: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
-    def validate_values(self) -> "ListPolicyConfig":
+    def validate_values(self) -> ListPolicyConfig:
         if not self.allowed_values and not self.denied_values:
             raise ValueError("list policy must define at least one allowed or denied value")
         overlap = set(self.allowed_values).intersection(self.denied_values)
@@ -129,7 +129,7 @@ class IAMConfig(StrictModel):
     projects: dict[str, dict[str, list[str]]] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def validate_members(self) -> "IAMConfig":
+    def validate_members(self) -> IAMConfig:
         for scope_name, bindings in self.organization.items():
             validate_iam_binding(scope_name, bindings)
         for folder_bindings in self.folders.values():
@@ -200,7 +200,7 @@ class FoundationConfig(StrictModel):
         return validate_labels(labels)
 
     @model_validator(mode="after")
-    def validate_references(self) -> "FoundationConfig":
+    def validate_references(self) -> FoundationConfig:
         folder_keys = set(self.folders)
         project_keys = set(self.projects)
 

@@ -5,7 +5,6 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-
 VALID_ACTIONS = {"init", "validate", "fmt", "plan", "apply", "destroy"}
 
 
