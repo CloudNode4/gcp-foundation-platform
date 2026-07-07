@@ -7,12 +7,6 @@ on:
         description: Organization config file
         required: true
         default: config/example.organization.yaml
-  pull_request:
-    paths:
-      - 'terraform/**'
-      - 'config/**'
-      - 'src/**'
-      - '.github/workflows/terraform-plan.yml'
 
 permissions:
   contents: read
