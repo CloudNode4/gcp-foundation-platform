@@ -36,7 +36,9 @@ def build_command(
     terraform_bin: str = "terraform",
 ) -> TerraformCommand:
     if action not in VALID_ACTIONS:
-        raise ValueError(f"Unsupported Terraform action '{action}'. Valid actions: {sorted(VALID_ACTIONS)}")
+        raise ValueError(
+            f"Unsupported Terraform action '{action}'. Valid actions: {sorted(VALID_ACTIONS)}"
+        )
 
     args: list[str] = []
     if action in {"plan", "apply", "destroy"} and var_file:

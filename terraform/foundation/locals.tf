@@ -1,5 +1,5 @@
 locals {
-  folder_ids = module.folders.folder_ids
+  folder_ids  = module.folders.folder_ids
   project_ids = module.projects.project_ids
 
   projects = {

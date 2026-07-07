@@ -24,7 +24,7 @@ console = Console()
 
 @app.command("validate-config")
 def validate_config(
-    config: Annotated[Path, typer.Option("--config", "-c", exists=True, readable=True)]
+    config: Annotated[Path, typer.Option("--config", "-c", exists=True, readable=True)],
 ) -> None:
     """Validate an organization YAML configuration file."""
     try:
@@ -86,7 +86,9 @@ def inventory(
 
 
 @app.command("check-repo")
-def check_repo(path: Annotated[Path, typer.Option("--path", "-p", exists=True)] = Path(".")) -> None:
+def check_repo(
+    path: Annotated[Path, typer.Option("--path", "-p", exists=True)] = Path("."),
+) -> None:
     """Check that the repository contains the expected production-grade files."""
     result = check_repo_structure(path)
     if result.ok:

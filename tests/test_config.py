@@ -63,4 +63,6 @@ def test_tfvars_generation_shape() -> None:
         "compute.googleapis.com",
         "serviceusage.googleapis.com",
     ]
-    assert tfvars["org_policies"]["boolean"]["constraints/compute.skipDefaultNetworkCreation"] is True
+    assert (
+        tfvars["org_policies"]["boolean"]["constraints/compute.skipDefaultNetworkCreation"] is True
+    )

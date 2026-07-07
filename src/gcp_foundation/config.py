@@ -211,7 +211,9 @@ class FoundationConfig(StrictModel):
                 )
 
         for network_key, network in self.networks.items():
-            if network.host_project not in project_keys and not network.host_project.startswith("projects/"):
+            if network.host_project not in project_keys and not network.host_project.startswith(
+                "projects/"
+            ):
                 raise ValueError(
                     f"network '{network_key}' references unknown host project "
                     f"'{network.host_project}'"
@@ -249,7 +251,11 @@ def validate_labels(labels: dict[str, str]) -> dict[str, str]:
 
 
 def validate_iam_binding(role: str, members: list[str]) -> None:
-    if not role.startswith("roles/") and not role.startswith("organizations/") and not role.startswith("projects/"):
+    if (
+        not role.startswith("roles/")
+        and not role.startswith("organizations/")
+        and not role.startswith("projects/")
+    ):
         raise ValueError(f"Invalid IAM role name: {role}")
     for member in members:
         if not IAM_MEMBER_RE.match(member):
@@ -277,9 +283,13 @@ def to_tfvars(config: FoundationConfig) -> dict[str, Any]:
         "billing_account": config.billing_account,
         "default_region": config.default_region,
         "labels": config.labels,
-        "folders": {key: value.model_dump(exclude_none=True) for key, value in config.folders.items()},
+        "folders": {
+            key: value.model_dump(exclude_none=True) for key, value in config.folders.items()
+        },
         "projects": {key: value.model_dump() for key, value in config.projects.items()},
-        "networks": {key: value.model_dump(exclude_none=True) for key, value in config.networks.items()},
+        "networks": {
+            key: value.model_dump(exclude_none=True) for key, value in config.networks.items()
+        },
         "iam_bindings": config.iam.model_dump(),
         "org_policies": config.org_policies.model_dump(),
         "logging": config.logging.model_dump() if config.logging else None,

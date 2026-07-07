@@ -56,7 +56,7 @@ module "monitoring" {
   count  = local.monitoring_config == null ? 0 : 1
   source = "../modules/monitoring"
 
-  project_id             = local.monitoring_config.project_id
+  project_id            = local.monitoring_config.project_id
   notification_channels = try(local.monitoring_config.notification_channels, [])
 
   depends_on = [module.projects]
