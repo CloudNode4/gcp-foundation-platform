@@ -1,0 +1,116 @@
+organization_id: "123456789012"
+billing_account: "000000-000000-000000"
+default_region: europe-west1
+labels:
+  owner: platform
+  managed_by: terraform
+  environment: foundation
+
+folders:
+  platform:
+    display_name: Platform
+  security:
+    display_name: Security
+  workloads:
+    display_name: Workloads
+
+projects:
+  foundation-host:
+    project_id: example-foundation-host
+    name: foundation-host
+    folder: platform
+    services:
+      - compute.googleapis.com
+      - dns.googleapis.com
+      - iam.googleapis.com
+      - cloudresourcemanager.googleapis.com
+      - serviceusage.googleapis.com
+      - logging.googleapis.com
+      - monitoring.googleapis.com
+    labels:
+      tier: network
+  audit-logs:
+    project_id: example-audit-logs
+    name: audit-logs
+    folder: security
+    services:
+      - logging.googleapis.com
+      - storage.googleapis.com
+      - monitoring.googleapis.com
+    labels:
+      tier: security
+  shared-services:
+    project_id: example-shared-services
+    name: shared-services
+    folder: platform
+    services:
+      - artifactregistry.googleapis.com
+      - secretmanager.googleapis.com
+      - cloudkms.googleapis.com
+      - monitoring.googleapis.com
+    labels:
+      tier: platform
+
+networks:
+  foundation-shared-vpc:
+    host_project: foundation-host
+    description: Shared VPC for platform and workload projects.
+    auto_create_subnetworks: false
+    subnets:
+      - name: gke-private-euw1
+        region: europe-west1
+        ip_cidr_range: 10.10.0.0/20
+        private_ip_google_access: true
+        secondary_ip_ranges:
+          pods: 10.11.0.0/16
+          services: 10.12.0.0/20
+      - name: services-euw1
+        region: europe-west1
+        ip_cidr_range: 10.20.0.0/22
+        private_ip_google_access: true
+    nat:
+      enabled: true
+      region: europe-west1
+
+iam:
+  organization:
+    roles/viewer:
+      - group:gcp-viewers@example.com
+    roles/resourcemanager.folderViewer:
+      - group:gcp-platform@example.com
+  folders:
+    platform:
+      roles/resourcemanager.projectCreator:
+        - group:gcp-platform@example.com
+    security:
+      roles/logging.viewer:
+        - group:gcp-security@example.com
+  projects:
+    shared-services:
+      roles/secretmanager.admin:
+        - group:gcp-platform@example.com
+
+org_policies:
+  boolean:
+    constraints/compute.skipDefaultNetworkCreation: true
+    constraints/iam.disableServiceAccountKeyCreation: true
+    constraints/iam.disableServiceAccountKeyUpload: true
+  list:
+    constraints/gcp.resourceLocations:
+      allowed_values:
+        - in:eu-locations
+      denied_values: []
+
+logging:
+  audit_logs_project: audit-logs
+  audit_logs_bucket: foundation-audit-logs-example
+  location: EU
+  retention_days: 365
+
+monitoring:
+  project: shared-services
+  notification_channels:
+    - name: platform-email
+      display_name: Platform team email
+      type: email
+      email: platform@example.com

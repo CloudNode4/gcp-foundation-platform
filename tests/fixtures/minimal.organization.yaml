@@ -1,0 +1,28 @@
+organization_id: "123456789012"
+billing_account: "000000-000000-000000"
+default_region: europe-west1
+labels:
+  owner: platform
+folders:
+  platform:
+    display_name: Platform
+projects:
+  foundation-host:
+    project_id: example-foundation-host
+    name: foundation-host
+    folder: platform
+    services:
+      - compute.googleapis.com
+      - serviceusage.googleapis.com
+networks:
+  foundation-shared-vpc:
+    host_project: foundation-host
+    subnets:
+      - name: private-euw1
+        region: europe-west1
+        ip_cidr_range: 10.0.0.0/24
+        secondary_ip_ranges:
+          pods: 10.1.0.0/16
+org_policies:
+  boolean:
+    constraints/compute.skipDefaultNetworkCreation: true

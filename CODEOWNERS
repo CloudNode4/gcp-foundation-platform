@@ -1,0 +1,5 @@
+* @platform-team
+/terraform/ @platform-team
+/src/ @platform-team
+/.github/ @platform-team
+/docs/ @platform-team

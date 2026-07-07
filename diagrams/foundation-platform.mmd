@@ -1,0 +1,36 @@
+flowchart TD
+    subgraph GitHub
+      PR[Pull Request]
+      CI[CI checks]
+    end
+
+    subgraph Python
+      Config[organization.yaml]
+      Validate[validate-config]
+      Generate[generate-tfvars]
+      Inventory[inventory]
+    end
+
+    subgraph Terraform
+      Root[foundation root]
+      Folders[folder-factory]
+      Projects[project-factory]
+      VPC[shared-vpc]
+      IAM[iam-bindings]
+      Policy[org-policies]
+      Logs[logging]
+      Mon[monitoring]
+    end
+
+    PR --> CI
+    Config --> Validate
+    Validate --> Generate
+    Generate --> Root
+    Config --> Inventory
+    Root --> Folders
+    Root --> Projects
+    Root --> VPC
+    Root --> IAM
+    Root --> Policy
+    Root --> Logs
+    Root --> Mon
